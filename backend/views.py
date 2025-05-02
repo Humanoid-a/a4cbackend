@@ -4,11 +4,14 @@ from .models import School
 from .serializers import SchoolSerializer
 from .models import FrontendUser
 from .serializers import FrontendUserSerializer
+from rest_framework import permissions
 
 class FrontendUserViewSet(viewsets.ModelViewSet):
-    queryset = FrontendUser.objects.all().order_by('username')
+    queryset = FrontendUser.objects.all()
     serializer_class = FrontendUserSerializer
-    permission_classes = [permissions.AllowAny]  # or restrict as you see fit
+
+    # only allow authenticated users to edit their own data:
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
