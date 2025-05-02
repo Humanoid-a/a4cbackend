@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 
 #Change this host later when deploying on server
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:9090",
+    "http://localhost:9091",
 ]
 
 REST_FRAMEWORK = {
