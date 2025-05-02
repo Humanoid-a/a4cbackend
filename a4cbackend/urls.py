@@ -17,14 +17,18 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
+
 from backend.views import SchoolViewSet
+from backend.views import FrontendUserViewSet
 
 router = DefaultRouter()
 router.register(r'schools', SchoolViewSet, basename='school')
+router.register(r'frontend-users', FrontendUserViewSet, basename='frontenduser')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    # if JWT:
-    #path('api/auth/', include('rest_framework_simplejwt.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
