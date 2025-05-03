@@ -1,10 +1,16 @@
 from rest_framework import viewsets, permissions
+from rest_framework.generics import CreateAPIView
 
 from .models import School
 from .serializers import SchoolSerializer
 from .models import FrontendUser
 from .serializers import FrontendUserSerializer
-from rest_framework import permissions
+
+class RegisterView(CreateAPIView):
+    queryset = FrontendUser.objects.all()
+    serializer_class = FrontendUserSerializer
+    permission_classes = [permissions.AllowAny]
+
 
 class FrontendUserViewSet(viewsets.ModelViewSet):
     queryset = FrontendUser.objects.all()

@@ -27,6 +27,7 @@ from rest_framework_simplejwt.views import (
 
 from backend.views import SchoolViewSet
 from backend.views import FrontendUserViewSet
+from backend.views import RegisterView
 
 router = DefaultRouter()
 router.register(r'schools', SchoolViewSet, basename='school')
@@ -39,5 +40,6 @@ urlpatterns = [
     # JWT login & refresh:
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/register/', RegisterView.as_view(), name='register'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

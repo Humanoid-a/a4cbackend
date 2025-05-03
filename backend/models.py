@@ -3,6 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 class FrontendUser(AbstractUser):
     # username, email, password already inherited
+    username = models.CharField(
+        max_length=30,
+        unique=True,
+        help_text="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
+        error_messages={
+            "unique": "A user with that username already exists.",
+        },
+    )
     biography       = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
