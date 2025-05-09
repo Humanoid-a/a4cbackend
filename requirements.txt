@@ -3,3 +3,4 @@ djangorestframework
 django-cors-headers
 djangorestframework-simplejwt
 pillow
+django_countries
