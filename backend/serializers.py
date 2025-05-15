@@ -16,7 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'nationality',
             'gender',
         ]
-        read_only_fields = fields
+        #read_only_fields = fields
 
 
 class FrontendUserSerializer(serializers.ModelSerializer):

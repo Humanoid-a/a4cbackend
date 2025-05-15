@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -41,13 +43,9 @@ class Gender(models.TextChoices):
     OTHER  = "O", "Other / Prefer not to say"
 
 
-class FrontendUser(models.Model):
-    pass
-
-
 class UserProfile(models.Model):
     user = models.OneToOneField(
-        FrontendUser,
+        "FrontendUser",
         on_delete=models.CASCADE,
         related_name="profile"
     )
@@ -114,12 +112,6 @@ class UserProfile(models.Model):
     )
 
 class FrontendUser(AbstractUser):
-    profile = models.OneToOneField(
-        UserProfile,
-        on_delete=models.CASCADE,
-        related_name='baseuser',
-        null=True
-    )
 
     # username, email, password already inherited
     username = models.CharField(
