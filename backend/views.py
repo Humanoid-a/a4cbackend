@@ -31,6 +31,19 @@ class ProfileView(RetrieveUpdateAPIView):
 
     def get_object(self):
         # assumes you have a OneToOne from FrontendUser → UserProfile named 'profile'
+        if self.request.user.profile == None:
+            profile, created = UserProfile.objects.get_or_create(
+                user=self.request.user,
+                defaults={
+                    'sat_reading': 200,
+                    'sat_math': 200,
+                    'gpa': 0.00,
+                    'recommendation_strength': 1,
+                    'nationality': '',  # make sure your model allows blank=''
+                    # intended_major and gender will use their model defaults
+                }
+            )
+            self.request.user.profile = profile
         return self.request.user.profile
 
 class SchoolViewSet(viewsets.ModelViewSet):

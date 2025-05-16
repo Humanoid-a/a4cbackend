@@ -100,6 +100,8 @@ class UserProfile(models.Model):
     # Nationality: using django‑countries for ISO country codes
     nationality = CountryField(
         blank_label="(Select country)",
+        blank=True,
+        null=True,
         help_text="Country of nationality"
     )
 
