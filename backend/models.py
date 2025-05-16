@@ -9,20 +9,45 @@ from django.core.validators import (
 )
 from django.utils.deconstruct import deconstructible
 from django_countries.fields import CountryField  # pip install django-countries
+from decimal import Decimal, InvalidOperation  # Make sure to import Decimal and InvalidOperation
 
+
+# ... other imports ...
 
 @deconstructible
 class StepValidator:
     """
     Ensure that a numeric value is a multiple of `step`.
     """
+
     def __init__(self, step):
-        self.step = step
+        try:
+            # Ensure self.step is a Decimal
+            self.step = Decimal(str(step))
+        except InvalidOperation:
+            raise ValueError(f"StepValidator step must be a valid number, got {step}")
+        if self.step <= Decimal('0'):
+            raise ValueError("StepValidator step must be positive.")
 
     def __call__(self, value):
-        # we multiply then mod 1 to allow floats
-        if (value / self.step) % 1 != 0:
-            raise ValidationError(f"Value must be in steps of {self.step}.")
+        # Ensure value is treated as Decimal for the operation
+        # Model fields like DecimalField should pass 'value' as Decimal.
+        # For IntegerFields or FloatFields using this validator with a Decimal step,
+        # explicit conversion might be needed if 'value' isn't already Decimal.
+
+        val_decimal = value
+        if not isinstance(value, Decimal):
+            try:
+                # Attempt to convert value to Decimal if it's not already
+                val_decimal = Decimal(str(value))
+            except InvalidOperation:
+                # Handle cases where conversion is not possible (e.g., non-numeric string)
+                # Though Django's field validation should catch this earlier for numeric fields.
+                raise ValidationError(f"Value '{value}' could not be processed for step validation.")
+
+        # Perform the check using Decimal arithmetic
+        if val_decimal % self.step != Decimal('0'):
+            raise ValidationError(f"Value {val_decimal} must be in steps of {self.step}.")
 
     def __eq__(self, other):
         return isinstance(other, StepValidator) and other.step == self.step
@@ -68,14 +93,13 @@ class UserProfile(models.Model):
         help_text="SAT Math score, 200–800 in 10‑point increments"
     )
 
-    # GPA: decimal 0.00–4.00 in steps of 0.05
     gpa = models.DecimalField(
         max_digits=3,
         decimal_places=2,
         validators=[
-            MinValueValidator(0.00),
-            MaxValueValidator(4.00),
-            StepValidator(0.05),
+            MinValueValidator(Decimal('0.00')),  # Use Decimal
+            MaxValueValidator(Decimal('4.00')),  # Use Decimal
+            StepValidator(Decimal('0.05')),  # Pass Decimal to StepValidator
         ],
         help_text="GPA on a 0.00–4.00 scale in 0.05 increments"
     )

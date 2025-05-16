@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import School, FrontendUser, UserProfile
+from decimal import Decimal
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -50,13 +51,13 @@ class FrontendUserSerializer(serializers.ModelSerializer):
         # 3) Create a default‐valued profile so the client doesn’t have to supply it
         UserProfile.objects.create(
             user=user,
-            sat_reading=200,            # lowest valid SAT reading
-            sat_math=200,               # lowest valid SAT math
-            gpa=0.00,                   # lowest valid GPA
-            # `intended_major` and `gender` have defaults on the model,
-            # so you can omit them here if you like:
-            recommendation_strength=1,  # minimum allowed rec strength
-            nationality='',             # blank country; change as you see fit
+            sat_reading=200,
+            sat_math=200,
+            gpa=Decimal('0.00'),  # Use Decimal for GPA
+            recommendation_strength=1,
+            # nationality can be left to its model default (blank=True, null=True)
+            # or set explicitly if needed:
+            # nationality=None, # or a default country code string like 'US'
         )
 
         return user
