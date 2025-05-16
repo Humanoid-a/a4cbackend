@@ -31,7 +31,7 @@ class ProfileView(RetrieveUpdateAPIView):
 
     def get_object(self):
         # assumes you have a OneToOne from FrontendUser → UserProfile named 'profile'
-        if self.request.user.profile == None:
+        if not hasattr(self.request.user, 'profile'):
             profile, created = UserProfile.objects.get_or_create(
                 user=self.request.user,
                 defaults={
@@ -44,6 +44,7 @@ class ProfileView(RetrieveUpdateAPIView):
                 }
             )
             self.request.user.profile = profile
+        print("Returning: ", self.request.user.profile)
         return self.request.user.profile
 
 class SchoolViewSet(viewsets.ModelViewSet):

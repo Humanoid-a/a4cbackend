@@ -4,6 +4,7 @@ from .models import School, FrontendUser, UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    nationality = serializers.CharField(source='nationality.code')
     class Meta:
         model = UserProfile
         # only expose read‑only fields if you don’t want clients to change these through this endpoint
