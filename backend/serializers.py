@@ -4,22 +4,32 @@ from .models import School, FrontendUser, UserProfile
 from decimal import Decimal
 
 
+from rest_framework import serializers
+from .models import School, FrontendUser, UserProfile
+from decimal import Decimal
+
 class UserProfileSerializer(serializers.ModelSerializer):
-    nationality = serializers.CharField(source='nationality.code')
+    # nationality = serializers.CharField(source='nationality.code') # Original
+    nationality_code = serializers.SerializerMethodField()
+
     class Meta:
         model = UserProfile
-        # only expose read‑only fields if you don’t want clients to change these through this endpoint
         fields = [
             'sat_reading',
             'sat_math',
             'gpa',
             'intended_major',
             'recommendation_strength',
-            'nationality',
+            # 'nationality', # Remove this if you only want the code
+            'nationality_code', # Add this
             'gender',
         ]
-        #read_only_fields = fields
+        # read_only_fields = fields # Uncomment if needed
 
+    def get_nationality_code(self, obj):
+        if obj.nationality:
+            return obj.nationality.code
+        return None
 
 class FrontendUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
