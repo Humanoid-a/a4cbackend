@@ -33,6 +33,7 @@ DEBUG = False
 #Change this host later when deploying on server
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:9090",
+    "https://apply4college.org",
 ]
 
 REST_FRAMEWORK = {
