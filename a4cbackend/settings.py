@@ -22,12 +22,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+ALLOWED_HOSTS = ['*']
+
 SECRET_KEY = "django-insecure-o_x9zi+d0@g7y$eipoljrim0+#ctydav1vs0+*rve8egy8^%&0"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
 
 
 #Change this host later when deploying on server
@@ -108,11 +108,18 @@ WSGI_APPLICATION = "a4cbackend.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+import os
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'a4c',
+        'USER': 'will',
+        'PASSWORD': 'Willwppo',
+        'HOST': '',  # Leave empty or comment out to ensure socket is preferred
+        'PORT': '',  # Leave empty or comment out
+        'OPTIONS': {
+            'unix_socket': '/var/run/mysqld/mysqld.sock',  # <-- This is the correct path
+        },
     }
 }
 
