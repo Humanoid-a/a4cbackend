@@ -53,19 +53,22 @@ class StepValidator:
         return isinstance(other, StepValidator) and other.step == self.step
 
 class Major(models.TextChoices):
-    ENGINEERING = "ENG", "Engineering"
-    MATH         = "MTH", "Mathematics"
-    PHYSICS      = "PHY", "Physics"
-    CHEMISTRY    = "CHM", "Chemistry"
-    BIOLOGY      = "BIO", "Biology"
-    ENGLISH      = "ENGG", "English"
-    HISTORY      = "HIS", "History"
+    #ENGINEERING = "ENG", "Engineering"
+    #MATH         = "MTH", "Mathematics"
+    #PHYSICS      = "PHY", "Physics"
+    #CHEMISTRY    = "CHM", "Chemistry"
+    #BIOLOGY      = "BIO", "Biology"
+    #ENGLISH      = "ENGG", "English"
+    #HISTORY      = "HIS", "History"
+    STEM = "STEM", "Science, Technology, Engineering, Math"
+    LAH = "LAH", "Liberal Arts & Humanities"
     # …add your full list of intended majors…
 
 class Gender(models.TextChoices):
     MALE   = "M", "Male"
     FEMALE = "F", "Female"
-    OTHER  = "O", "Other / Prefer not to say"
+    OTHER  = "O", "Non-binary"
+    NA  = "N", "Prefer not to say"
 
 
 class UserProfile(models.Model):
@@ -108,7 +111,7 @@ class UserProfile(models.Model):
     intended_major = models.CharField(
         max_length=4,
         choices=Major.choices,
-        default=Major.ENGINEERING,
+        default=Major.STEM,
         help_text="Intended college major"
     )
 
