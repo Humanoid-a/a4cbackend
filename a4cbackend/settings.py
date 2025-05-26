@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import platform
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -110,20 +111,39 @@ WSGI_APPLICATION = "a4cbackend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 import os
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'a4c',
-        'USER': 'will',
-        'PASSWORD': 'Willwppo',
-        'HOST': '',  # Leave empty or comment out to ensure socket is preferred
-        'PORT': '',  # Leave empty or comment out
-        'OPTIONS': {
-            'unix_socket': '/var/run/mysqld/mysqld.sock',  # <-- This is the correct path
-        },
-    }
+db_config = {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'a4c',
+    'USER': 'will',
+    'PASSWORD': 'Willwppo', # Consider using environment variables for sensitive data
 }
 
+current_os = platform.system()
+if current_os == 'Darwin':  # macOS
+    db_config['HOST'] = ''
+    db_config['PORT'] = ''
+    db_config['OPTIONS'] = {
+        'unix_socket': '/tmp/mysql.sock',
+    }
+
+elif current_os == 'Linux':
+    db_config['HOST'] = ''
+    db_config['PORT'] = ''
+    db_config['OPTIONS'] = {
+        # Common socket path for Linux. Verify this path for your specific Linux distribution
+        # and MySQL server configuration (e.g., check /etc/mysql/my.cnf or similar).
+        'unix_socket': '/var/run/mysqld/mysqld.sock',
+    }
+else:
+    # Default to TCP/IP for other systems (e.g., Windows)
+    db_config['HOST'] = '127.0.0.1'
+    db_config['PORT'] = '3306'
+    # No specific 'OPTIONS' needed for basic TCP/IP, or set to {} if preferred.
+    # db_config['OPTIONS'] = {}
+
+DATABASES = {
+    'default': db_config
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
